@@ -1,0 +1,149 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+</head>
+<body ng-app="SideMenuApp" ng-cloak>
+  <!--
+    Your HTML content here
+  -->  
+  <md-toolbar class="md-hue-2">
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+          <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        </md-button>
+
+        <h2 flex md-truncate>Toolbar with Disabled/Enabled Icon Buttons</h2>
+
+        <md-button class="md-icon-button" aria-label="Favorite">
+          <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" aria-label="More">
+          <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+        </md-button>
+      </div>
+  </md-toolbar>
+
+  <div ng-controller="AppCtrl" layout="column" style="height: 500px;" ng-cloak>
+
+  <section layout="row" flex>
+
+    <md-sidenav class="md-sidenav-left" md-component-id="left"
+                md-disable-backdrop md-whiteframe="4">
+
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Disabled Backdrop</h1>
+      </md-toolbar>
+
+      <md-content layout-margin>
+        <p>
+          This sidenav is not showing any backdrop, where users can click on it, to close the sidenav.
+        </p>
+        <md-button ng-click="toggleLeft()" class="md-accent">
+          Close this Sidenav
+        </md-button>
+      </md-content>
+
+    </md-sidenav>
+
+    <md-content flex layout-padding>
+
+      <div layout="column" layout-align="top center">
+        <p>
+          Developers can also disable the backdrop of the sidenav.<br/>
+          This will disable the functionality to click outside to close the sidenav.
+        </p>
+
+        <div>
+          <md-button ng-click="toggleLeft()" class="md-raised">
+            Toggle Sidenav
+          </md-button>
+        </div>
+        <div>
+            <md-button ng-click="showCustomToast()" class="md-raised" style="padding-left: 10px;padding-right: 10px;">
+                Show Custom Toast
+            </md-button>
+        </div>
+
+      </div>
+
+    </md-content>
+
+  </section>
+
+</div>
+  
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">    
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    angular
+    .module('SideMenuApp', ['ngMaterial'])
+    .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdToast) {
+        $scope.toggleLeft = buildToggler('left');
+        $scope.toggleRight = buildToggler('right');
+
+        function buildToggler(componentId) {
+        return function() {
+            $mdSidenav(componentId).toggle();
+        };
+        }
+
+        $scope.showCustomToast = function() {
+        $mdToast.show({
+          hideDelay   : 3000,
+          position    : 'top right',
+          controller  : 'ToastCtrl',
+          templateUrl : 'toast-template.html'
+        });
+      };
+
+    })
+
+    .controller('ToastCtrl', function($scope, $mdToast, $mdDialog) {
+
+      $scope.closeToast = function() {
+        if (isDlgOpen) return;
+
+        $mdToast
+          .hide()
+          .then(function() {
+            isDlgOpen = false;
+          });
+      };
+
+      $scope.openMoreInfo = function(e) {
+        if ( isDlgOpen ) return;
+        isDlgOpen = true;
+
+        $mdDialog
+          .show($mdDialog
+            .alert()
+            .title('More info goes here.')
+            .textContent('Something witty.')
+            .ariaLabel('More info')
+            .ok('Got it')
+            .targetEvent(e)
+          )
+          .then(function() {
+            isDlgOpen = false;
+          });
+      };
+    });
+  </script>
+  
+</body>
+</html>
+
